@@ -34,6 +34,11 @@ const weatherSchema = new mongoose.Schema({
     type: String,
     enum: ['metric', 'imperial'],
     default: 'metric'
+  },
+  notes: {
+    type: String,
+    trim: true,
+    default: ''
   }
 }, {
   timestamps: true // Automatically adds createdAt and updatedAt
