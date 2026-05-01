@@ -1,11 +1,14 @@
 import app from './app.js';
 import env from './config/env.js';
+import connectDB from './config/db.js';
 
 const startServer = async () => {
     try {
-        // Change "PerformanceEventTiming.prototype" to "env.port"
+        // Connect to MongoDB first
+        await connectDB();
+
         app.listen(env.port, () => {
-            console.log(`[ SERVER ] Running in ${env.nodeEnv} mode`); // Fixed backticks here too
+            console.log(`[ SERVER ] Running in ${env.nodeEnv} mode`);
             console.log(`[ SERVER ] Listening on port ${env.port}`);
             console.log(`[ SERVER ] Health check: http://localhost:${env.port}/api/health`);
         });
