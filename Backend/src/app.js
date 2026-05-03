@@ -7,6 +7,7 @@ import { apiLimiter } from './middlewares/rateLimiter.js';
 import weatherRoutes from './routes/weatherRoutes.js';
 import historyRoutes from './routes/historyRoutes.js';
 import exportRoutes from './routes/exportRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 
 const app = express();
 
@@ -38,6 +39,7 @@ if (process.env.NODE_ENV ==='development'){
 app.use('/api/', apiLimiter);
 
 // API Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/weather', weatherRoutes);
 app.use('/api/history', historyRoutes);
 app.use('/api/export', exportRoutes);
