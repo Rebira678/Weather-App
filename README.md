@@ -124,7 +124,15 @@ Weather App/
    npm run dev
    ```
 
-## 🌐 Deployment
+## 🌐 Deployment Status
+
+- **Frontend**: Deployed on [Vercel](https://weather-app-one-lilac-70.vercel.app)
+- **Backend**: Deployed on [Render](https://weather-app-xfze.onrender.com)
+
+> [!NOTE]
+> The backend is hosted on Render's free tier. If the application hasn't been used recently, the backend may take 30-60 seconds to "spin up" (cold start). If the frontend doesn't show data immediately, please wait a moment or refresh the page.
+
+## 🌐 Deployment Guide
 
 ### Backend (Render)
 1. Create a new "Web Service" on Render.
@@ -159,9 +167,6 @@ If you encounter `sh: 1: vite: not found` when running `npm run dev`, try the fo
    npm install
    ```
 3. The project scripts have been updated to use explicit paths (`./node_modules/.bin/vite`) to help resolve environment-specific path issues.
-
-### CORS Errors
-If you see a CORS error in the browser console, ensure that the `CLIENT_ORIGIN` in your Backend environment variables matches your frontend URL exactly (e.g., `https://your-app.vercel.app` with **no trailing slash**). The backend code now automatically strips trailing slashes, but it's best to provide the clean URL.
 
 ### Backend Connection Issues
 Ensure MongoDB is running and the `MONGO_URI` in `Backend/.env` is correct.
