@@ -1,6 +1,11 @@
 import mongoose from 'mongoose';
 
 const weatherSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: [true, 'Weather record must belong to a user']
+  },
   locationName: {
     type: String,
     required: [true, 'Location name is required'],

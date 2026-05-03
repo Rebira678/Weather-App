@@ -5,8 +5,11 @@ import {
   updateWeatherRecord,
   deleteWeatherRecord
 } from '../controllers/historyController.js';
+import { protect } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
+
+router.use(protect); // Protect all history routes
 
 router.route('/')
   .post(createWeatherRecord)
