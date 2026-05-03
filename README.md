@@ -2,8 +2,27 @@
 
 WeatherAI is a production-ready, full-stack weather application designed to provide users with comprehensive weather forecasts, interactive mapping, and contextual travel insights. Built with the MERN stack, it offers a premium user experience with real-time data and smart search capabilities.
 
-## 🚀 Features
+## ⚡ Quick Start
 
+To get the application running quickly:
+
+1. **Backend**:
+   ```bash
+   cd Backend
+   npm install
+   # Ensure .env is configured
+   npm start
+   ```
+
+2. **Frontend**:
+   ```bash
+   cd Frontend
+   npm install
+   # Ensure .env is configured
+   npm run dev
+   ```
+
+## 🚀 Features
 - **Real-Time Weather**: Instant access to current weather conditions for any city worldwide.
 - **5-Day Forecast**: Detailed daily forecasts to help you plan ahead.
 - **Interactive Maps**: Visualize locations using integrated Google Maps.
@@ -69,7 +88,7 @@ Weather App/
    ```bash
    npm install
    ```
-3. Create a `.env` file based on the provided template:
+3. Create a `.env` file based on the following template:
    ```env
    PORT=5000
    MONGO_URI=mongodb://localhost:27017/weather_app
@@ -100,6 +119,22 @@ Weather App/
    npm run dev
    ```
 
+## 🛠️ Troubleshooting
+
+### `vite: not found` Error
+If you encounter `sh: 1: vite: not found` when running `npm run dev`, try the following:
+1. Ensure you have run `npm install` in the `Frontend` directory.
+2. If the error persists, try running:
+   ```bash
+   rm -rf node_modules package-lock.json
+   npm install
+   ```
+3. The project scripts have been updated to use explicit paths (`./node_modules/.bin/vite`) to help resolve environment-specific path issues.
+
+### Backend Connection Issues
+Ensure MongoDB is running and the `MONGO_URI` in `Backend/.env` is correct.
+
 ## 📄 License
 
 This project is part of the PM Accelerator AI Engineer assessment.
+
