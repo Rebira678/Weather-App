@@ -3,7 +3,7 @@ import { useAuthStore } from '../store/useAuthStore';
 import { Wind, AlertCircle, X } from 'lucide-react';
 
 export default function Auth({ onClose, onSuccess }) {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const { login, signup, loading, error } = useAuthStore();
 
@@ -52,24 +52,6 @@ export default function Auth({ onClose, onSuccess }) {
               ? 'Enter your credentials to access your weather intelligence dashboard.' 
               : 'Sign up to start tracking and analyzing global weather data.'}
           </p>
-        </div>
-
-        <div className="grid grid-cols-1 gap-3 mb-6">
-          {[
-            { emoji: '🚀', label: 'AI PM Bootcamp', desc: 'Build real-life AI products with cross-functional teams.' },
-            { emoji: '🏆', label: 'PMA Pro', desc: 'Master FAANG-level PM skills and job-hunting strategies.' },
-            { emoji: '📈', label: 'PMA Leader', desc: 'Accelerate careers to Director and Executive levels.' },
-          ].map(({ emoji, label, desc }) => (
-            <div key={label} className="flex gap-4 p-4 bg-white/5 rounded-2xl border border-white/5 hover:bg-white/[0.08] transition-all group">
-              <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                {emoji}
-              </div>
-              <div className="flex-1">
-                <p className="text-white text-sm font-black uppercase tracking-tight">{label}</p>
-                <p className="text-white/40 text-[11px] font-bold leading-relaxed mt-1 uppercase tracking-wider">{desc}</p>
-              </div>
-            </div>
-          ))}
         </div>
 
         {error && (

@@ -45,8 +45,8 @@ To get the application running quickly:
 - **Runtime**: Node.js
 - **Framework**: Express.js
 - **Database**: MongoDB (Mongoose)
-- **Weather Data**: WeatherAPI.com
-- **Video Data**: YouTube Data API v3
+- **Weather Data**: [OpenWeatherMap API](https://openweathermap.org/api) (Current & 5-Day Forecast)
+- **Video Data**: [YouTube Data API v3](https://developers.google.com/youtube/v3) (Travel Guides)
 
 ## 📦 Project Structure
 
@@ -75,9 +75,9 @@ Weather App/
 - Node.js (v18+)
 - MongoDB (Running locally or Atlas)
 - API Keys:
-  - [WeatherAPI Key](https://www.weatherapi.com/)
-  - [Google Maps API Key](https://console.cloud.google.com/)
-  - [YouTube Data API Key](https://console.cloud.google.com/)
+  - [OpenWeatherMap API Key](https://home.openweathermap.org/api_keys) (Free tier)
+  - [Google Maps API Key](https://console.cloud.google.com/google/maps-apis/)
+  - [YouTube Data API Key](https://console.cloud.google.com/apis/library/youtube.googleapis.com)
 
 ### Backend Setup
 1. Navigate to the `Backend` directory:
@@ -92,8 +92,8 @@ Weather App/
    ```env
    PORT=5000
    MONGO_URI=mongodb://localhost:27017/weather_app
-   WEATHER_API_KEY=your_key_here
-   YOUTUBE_API_KEY=your_key_here
+   WEATHER_API_KEY=your_openweathermap_key_here
+   YOUTUBE_API_KEY=your_youtube_api_key_here
    ```
 4. Start the server:
    ```bash
@@ -111,13 +111,42 @@ Weather App/
    ```
 3. Create a `.env` file:
    ```env
+   # Backend URL — no trailing slash
+   # Local: http://localhost:5000/api
+   # Production: https://weather-app-xfze.onrender.com/api
    VITE_API_URL=http://localhost:5000/api
-   VITE_GOOGLE_MAPS_API_KEY=your_key_here
+
+   # Get from https://console.cloud.google.com/ (Maps JavaScript API)
+   VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
    ```
 4. Start the development server:
    ```bash
    npm run dev
    ```
+
+## 🌐 Deployment
+
+### Backend (Render)
+1. Create a new "Web Service" on Render.
+2. Connect your GitHub repository.
+3. Set the "Root Directory" to `Backend`.
+4. Add the following Environment Variables:
+   - `MONGO_URI`: Your MongoDB Atlas connection string.
+   - `WEATHER_API_KEY`: Your OpenWeatherMap key.
+   - `YOUTUBE_API_KEY`: Your YouTube API key.
+   - `CLIENT_ORIGIN`: Your Vercel frontend URL (e.g., `https://your-app.vercel.app`).
+   - `NODE_ENV`: `production`
+
+### Frontend (Vercel)
+1. Create a new project on Vercel.
+2. Connect your GitHub repository.
+3. Set the "Root Directory" to `Frontend`.
+4. In "Build & Development Settings":
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+5. Add the following Environment Variables:
+   - `VITE_API_URL`: Your Render backend URL (e.g., `https://weather-app-xfze.onrender.com/api`).
+   - `VITE_GOOGLE_MAPS_API_KEY`: Your Google Maps API key.
 
 ## 🛠️ Troubleshooting
 
