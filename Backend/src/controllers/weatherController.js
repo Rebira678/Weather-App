@@ -1,4 +1,4 @@
-import { getWeatherData } from '../services/weatherService.js';
+import { getWeatherData, getLocationSuggestions } from '../services/weatherService.js';
 import { getTravelGuideVideo } from '../services/youtubeService.js';
 
 // @desc    Get weather data and travel guide
@@ -28,6 +28,22 @@ export const searchWeather = async (req, res, next) => {
         travelGuide
       }
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get location suggestions
+// @route   GET /api/weather/suggestions
+// @access  Public
+export const getSuggestions = async (req, res, next) => {
+  try {
+    const { q } = req.query;
+    if (!q || q.length < 2) {
+      return res.status(200).json({ success: true, data: [] });
+    }
+    const suggestions = await getLocationSuggestions(q);
+    res.status(200).json({ success: true, data: suggestions });
   } catch (error) {
     next(error);
   }

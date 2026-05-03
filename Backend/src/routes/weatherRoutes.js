@@ -1,8 +1,9 @@
 import express from 'express';
-import { searchWeather } from '../controllers/weatherController.js';
+import { searchWeather, getSuggestions } from '../controllers/weatherController.js';
 
 const router = express.Router();
 
 router.get('/search', searchWeather);
+router.get('/suggestions', getSuggestions);
 
 export default router;
