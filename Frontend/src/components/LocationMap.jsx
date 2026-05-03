@@ -1,78 +1,72 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { MapPin } from 'lucide-react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
-const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+// Fix for default marker icon in Leaflet + React
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
-function loadGoogleMapsScript(callback) {
-  if (window.google && window.google.maps) {
-    callback();
-    return;
-  }
-  if (document.getElementById('google-maps-script')) {
-    document.getElementById('google-maps-script').addEventListener('load', callback);
-    return;
-  }
-  const script = document.createElement('script');
-  script.id = 'google-maps-script';
-  script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}`;
-  script.async = true;
-  script.defer = true;
-  script.onload = callback;
-  document.head.appendChild(script);
+let DefaultIcon = L.icon({
+    iconUrl: icon,
+    shadowUrl: iconShadow,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41]
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
+
+// Helper component to update map view when lat/lon change
+function ChangeView({ center, zoom }) {
+  const map = useMap();
+  useEffect(() => {
+    map.setView(center, zoom);
+  }, [center, zoom, map]);
+  return null;
 }
 
-export default function LocationMap({ lat, lon, cityName }) {
-  const mapRef = useRef(null);
+export default function LocationMap({ lat, lon, cityName, compact = false }) {
+  if (!lat || !lon) return null;
 
-  useEffect(() => {
-    if (!lat || !lon) return;
-
-    loadGoogleMapsScript(() => {
-      if (!mapRef.current || !window.google) return;
-
-      const center = { lat: parseFloat(lat), lng: parseFloat(lon) };
-
-      const map = new window.google.maps.Map(mapRef.current, {
-        center,
-        zoom: 11,
-        styles: [
-          { elementType: 'geometry', stylers: [{ color: '#1a1a2e' }] },
-          { elementType: 'labels.text.stroke', stylers: [{ color: '#0f0f1a' }] },
-          { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
-          { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#38414e' }] },
-          { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#17263c' }] },
-        ],
-        disableDefaultUI: true,
-        zoomControl: true,
-      });
-
-      new window.google.maps.Marker({
-        position: center,
-        map,
-        title: cityName,
-      });
-    });
-  }, [lat, lon, cityName]);
-
-  if (!GOOGLE_MAPS_API_KEY) {
-    return (
-      <div className="glass-card p-6 flex flex-col items-center justify-center gap-2 h-48 text-white/30">
-        <MapPin className="w-8 h-8" />
-        <p className="text-sm">Add VITE_GOOGLE_MAPS_API_KEY to enable interactive map</p>
-      </div>
-    );
-  }
+  const position = [parseFloat(lat), parseFloat(lon)];
 
   return (
-    <div className="glass-card overflow-hidden animate-slide-up">
-      <div className="flex items-center gap-2 px-5 pt-4 pb-3">
-        <MapPin className="w-4 h-4 text-primary-400" />
-        <h3 className="text-white font-semibold text-sm">{cityName}</h3>
-        <span className="ml-auto text-white/30 text-xs">
-          {parseFloat(lat).toFixed(4)}, {parseFloat(lon).toFixed(4)}
-        </span>
+    <div className={`dashboard-card overflow-hidden animate-slide-up ${compact ? 'h-full' : ''}`}>
+      {!compact && (
+        <div className="flex items-center gap-2 px-5 pt-4 pb-3 border-b border-[#2a2a2a] bg-[#1c1c1c]">
+          <MapPin className="w-4 h-4 text-white/40" />
+          <h3 className="text-white font-bold text-xs uppercase tracking-widest">{cityName}</h3>
+          <span className="ml-auto text-white/20 text-[10px] font-mono">
+            {parseFloat(lat).toFixed(4)}, {parseFloat(lon).toFixed(4)}
+          </span>
+        </div>
+      )}
+      <div className={`w-full ${compact ? 'h-full' : 'h-64'} relative z-0`}>
+        <MapContainer 
+          center={position} 
+          zoom={11} 
+          scrollWheelZoom={false}
+          style={{ height: '100%', width: '100%', background: '#0a0a0a' }}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            // Using a dark themed tile layer if possible, or sticking to standard
+          />
+          {/* Optional: Use a dark theme for the map tiles */}
+          <TileLayer
+            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          />
+          <Marker position={position}>
+            <Popup>
+              <div className="text-black font-bold">{cityName}</div>
+            </Popup>
+          </Marker>
+          <ChangeView center={position} zoom={11} />
+        </MapContainer>
       </div>
-      <div ref={mapRef} className="w-full h-52 md:h-64" />
     </div>
   );
 }

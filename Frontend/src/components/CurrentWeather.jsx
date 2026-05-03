@@ -1,7 +1,9 @@
 import React from 'react';
 import { Wind, Droplets, Sun, Cloud, CloudRain, CloudLightning, CloudSnow } from 'lucide-react';
+import { useWeatherStore } from '../store/useWeatherStore';
 
 export default function CurrentWeather({ data }) {
+  const { unit } = useWeatherStore();
   if (!data) return null;
 
   const { current, location } = data;
@@ -30,9 +32,9 @@ export default function CurrentWeather({ data }) {
 
           <div className="flex items-baseline gap-2">
             <span className="text-[120px] font-black leading-none tracking-tighter tabular-nums">
-              {Math.round(current.temp_c)}
+              {Math.round(unit === 'metric' ? current.temp_c : current.temp_f)}
             </span>
-            <span className="text-4xl font-bold text-white/40">°C</span>
+            <span className="text-4xl font-bold text-white/40">°{unit === 'metric' ? 'C' : 'F'}</span>
           </div>
 
           <div className="flex flex-wrap gap-8 pt-4">
@@ -47,7 +49,12 @@ export default function CurrentWeather({ data }) {
               <p className="text-white/40 text-[10px] uppercase font-bold tracking-widest">Wind</p>
               <div className="flex items-center gap-2">
                 <Wind className="w-4 h-4 text-green-400" />
-                <span className="font-bold">{current.wind_kph} <span className="text-[10px] text-white/40 uppercase">km/h</span></span>
+                <span className="font-bold">
+                  {unit === 'metric' ? current.wind_kph : current.wind_mph} 
+                  <span className="text-[10px] text-white/40 uppercase ml-1">
+                    {unit === 'metric' ? 'km/h' : 'mph'}
+                  </span>
+                </span>
               </div>
             </div>
             <div className="space-y-1">
@@ -66,7 +73,9 @@ export default function CurrentWeather({ data }) {
           </div>
           <div className="text-center md:text-right">
             <p className="text-3xl font-bold">{current.condition.text}</p>
-            <p className="text-white/30 text-sm mt-1">Feels like {Math.round(current.feelslike_c)}°C</p>
+            <p className="text-white/30 text-sm mt-1">
+              Feels like {Math.round(unit === 'metric' ? current.feelslike_c : current.feelslike_f)}°{unit === 'metric' ? 'C' : 'F'}
+            </p>
           </div>
         </div>
       </div>

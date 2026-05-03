@@ -1,7 +1,9 @@
 import React from 'react';
 import { Sun, Cloud, CloudRain, CloudLightning, CloudSnow } from 'lucide-react';
+import { useWeatherStore } from '../store/useWeatherStore';
 
 export default function ForecastGrid({ forecastData }) {
+  const { unit } = useWeatherStore();
   if (!forecastData || !forecastData.forecast) return null;
 
   const days = forecastData.forecast.forecastday;
@@ -43,7 +45,8 @@ export default function ForecastGrid({ forecastData }) {
           
           <div className="space-y-1">
             <p className="text-xl font-bold">
-              {Math.round(day.day.maxtemp_c)}<span className="text-white/20">/{Math.round(day.day.mintemp_c)}</span>
+              {Math.round(unit === 'metric' ? day.day.maxtemp_c : day.day.maxtemp_f)}
+              <span className="text-white/20">/{Math.round(unit === 'metric' ? day.day.mintemp_c : day.day.mintemp_f)}</span>
             </p>
             <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest">{day.day.condition.text}</p>
           </div>
