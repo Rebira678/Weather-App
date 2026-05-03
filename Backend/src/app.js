@@ -30,11 +30,11 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 //parse URL-encoded payloads
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 
 //request logging (only in development)
-if (process.env.NODE_ENV ==='development'){
-    app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
 }
 
 // Apply rate limiting to all /api routes
@@ -47,12 +47,12 @@ app.use('/api/history', historyRoutes);
 app.use('/api/export', exportRoutes);
 
 // Health check route
-app.get('/api/health',(req,res)=>{
-    res.status(200).json({
-        status:"success",
-        message:'Weather API is running flawlessly.',
-        timestamp: new Date().toISOString()
-    });
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: 'Weather API is running flawlessly.',
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Global error handler should be the last middleware
