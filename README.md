@@ -160,6 +160,9 @@ If you encounter `sh: 1: vite: not found` when running `npm run dev`, try the fo
    ```
 3. The project scripts have been updated to use explicit paths (`./node_modules/.bin/vite`) to help resolve environment-specific path issues.
 
+### CORS Errors
+If you see a CORS error in the browser console, ensure that the `CLIENT_ORIGIN` in your Backend environment variables matches your frontend URL exactly (e.g., `https://your-app.vercel.app` with **no trailing slash**). The backend code now automatically strips trailing slashes, but it's best to provide the clean URL.
+
 ### Backend Connection Issues
 Ensure MongoDB is running and the `MONGO_URI` in `Backend/.env` is correct.
 

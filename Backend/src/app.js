@@ -17,7 +17,9 @@ app.use(helmet());
 
 // Enable CORS — allow the Vite dev server and any production frontend
 const corsOptions = {
-  origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+  origin: process.env.CLIENT_ORIGIN 
+    ? process.env.CLIENT_ORIGIN.replace(/\/$/, '') 
+    : 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
