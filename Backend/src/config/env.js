@@ -7,6 +7,8 @@ const env = {
     mongoUri: process.env.MONGO_URI,
     weatherApiKey: process.env.WEATHER_API_KEY,
     youtubeApiKey: process.env.YOUTUBE_API_KEY,
+    jwtSecret: process.env.JWT_SECRET || 'secret-key-for-dev',
+    jwtExpiresIn: process.env.JWT_EXPIRES_IN || '90d'
 };
 
 if (!env.mongoUri) {
