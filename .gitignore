@@ -6,3 +6,8 @@ dist/
 build/
 .vscode/
 .idea/
+
+.env
+scratch/
+test_*.js
+*.log
