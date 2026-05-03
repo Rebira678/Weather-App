@@ -8,7 +8,8 @@ import {
 
 export const useHistoryStore = create((set, get) => ({
   // State
-  records: [],
+  records: JSON.parse(localStorage.getItem('weather_history') || '[]'),
+  selectedIds: [],
   loading: false,
   error: null,
 
@@ -17,9 +18,16 @@ export const useHistoryStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await getHistory();
-      set({ records: response.data, loading: false });
+      // If backend returns data, merge it. If it's empty (mock mode), keep what we have in localStorage
+      if (response.data && response.data.length > 0) {
+        set({ records: response.data, loading: false });
+        localStorage.setItem('weather_history', JSON.stringify(response.data));
+      } else {
+        set({ loading: false });
+      }
     } catch (err) {
-      set({ error: err.message, loading: false });
+      console.warn('Backend history fetch failed, using local storage');
+      set({ loading: false });
     }
   },
 
@@ -27,10 +35,11 @@ export const useHistoryStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await saveSearch(payload);
-      set((state) => ({
-        records: [response.data, ...state.records],
-        loading: false,
-      }));
+      set((state) => {
+        const newRecords = [response.data, ...state.records];
+        localStorage.setItem('weather_history', JSON.stringify(newRecords));
+        return { records: newRecords, loading: false };
+      });
     } catch (err) {
       set({ error: err.message, loading: false });
       throw err;
@@ -40,11 +49,13 @@ export const useHistoryStore = create((set, get) => ({
   updateRecord: async (id, payload) => {
     try {
       const response = await updateRecord(id, payload);
-      set((state) => ({
-        records: state.records.map((r) =>
-          r._id === id ? response.data : r
-        ),
-      }));
+      set((state) => {
+        const newRecords = state.records.map((r) =>
+          r._id === id ? { ...r, ...response.data } : r
+        );
+        localStorage.setItem('weather_history', JSON.stringify(newRecords));
+        return { records: newRecords };
+      });
     } catch (err) {
       set({ error: err.message });
       throw err;
@@ -54,13 +65,49 @@ export const useHistoryStore = create((set, get) => ({
   removeRecord: async (id) => {
     try {
       await deleteRecord(id);
-      set((state) => ({
-        records: state.records.filter((r) => r._id !== id),
-      }));
     } catch (err) {
-      set({ error: err.message });
-      throw err;
+      console.warn('Backend delete failed, performing local removal');
     }
+    set((state) => {
+      const newRecords = state.records.filter((r) => r._id !== id);
+      localStorage.setItem('weather_history', JSON.stringify(newRecords));
+      return { records: newRecords };
+    });
+  },
+
+  removeSelected: async () => {
+    const { selectedIds, records } = get();
+    if (selectedIds.length === 0) return;
+
+    try {
+      // Attempt to delete each on backend (best effort)
+      await Promise.all(selectedIds.map(id => deleteRecord(id).catch(() => {})));
+    } catch (err) {
+      console.warn('Backend bulk delete had issues, performing local removal');
+    }
+
+    set((state) => {
+      const newRecords = state.records.filter((r) => !selectedIds.includes(r._id));
+      localStorage.setItem('weather_history', JSON.stringify(newRecords));
+      return { records: newRecords, selectedIds: [] };
+    });
+  },
+
+  toggleSelection: (id) => {
+    set((state) => ({
+      selectedIds: state.selectedIds.includes(id)
+        ? state.selectedIds.filter((sid) => sid !== id)
+        : [...state.selectedIds, id],
+    }));
+  },
+
+  clearSelection: () => set({ selectedIds: [] }),
+
+  selectAll: () => set((state) => ({ selectedIds: state.records.map(r => r._id) })),
+
+  clearHistory: () => {
+    set({ records: [], selectedIds: [] });
+    localStorage.removeItem('weather_history');
   },
 
   clearError: () => set({ error: null }),
