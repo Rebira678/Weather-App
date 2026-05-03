@@ -38,17 +38,19 @@ function AboutModal({ onClose }) {
           The <span className="text-primary-300 font-semibold">Product Manager Accelerator</span> is a premier program supporting PM professionals from entry-level to executive leadership, with a community of over <span className="text-white font-medium">100,000+ members</span>.
         </p>
 
-        <div className="space-y-2 mb-5">
+        <div className="grid grid-cols-1 gap-3 mb-6">
           {[
             { emoji: '🚀', label: 'AI PM Bootcamp', desc: 'Build real-life AI products with cross-functional teams.' },
             { emoji: '🏆', label: 'PMA Pro', desc: 'Master FAANG-level PM skills and job-hunting strategies.' },
             { emoji: '📈', label: 'PMA Leader', desc: 'Accelerate careers to Director and Executive levels.' },
           ].map(({ emoji, label, desc }) => (
-            <div key={label} className="flex gap-3 p-3 bg-white/5 rounded-xl border border-white/5">
-              <span className="text-lg">{emoji}</span>
-              <div>
-                <p className="text-white text-sm font-semibold">{label}</p>
-                <p className="text-white/40 text-xs">{desc}</p>
+            <div key={label} className="flex gap-4 p-4 bg-white/5 rounded-2xl border border-white/5 hover:bg-white/[0.08] transition-all group">
+              <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                {emoji}
+              </div>
+              <div className="flex-1">
+                <p className="text-white text-sm font-black uppercase tracking-tight">{label}</p>
+                <p className="text-white/40 text-[11px] font-bold leading-relaxed mt-1 uppercase tracking-wider">{desc}</p>
               </div>
             </div>
           ))}
@@ -56,7 +58,7 @@ function AboutModal({ onClose }) {
 
         <div className="flex gap-3">
           <a
-            href="https://www.linkedin.com/company/product-manager-accelerator/"
+            href="https://www.linkedin.com/school/pmaccelerator/posts/?feedView=all"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-ghost flex items-center gap-2 text-sm flex-1 justify-center"
@@ -113,7 +115,7 @@ export default function Footer() {
             </button>
             <span>·</span>
             <a
-              href="https://www.linkedin.com/company/product-manager-accelerator/"
+              href="https://www.linkedin.com/school/pmaccelerator/posts/?feedView=all"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 hover:text-blue-400 transition-colors"
