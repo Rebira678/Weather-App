@@ -6,6 +6,18 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
+// Request interceptor to add token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 // Response interceptor for global error handling
 api.interceptors.response.use(
   (response) => response,
@@ -25,6 +37,9 @@ export const searchWeather = (q) =>
 // ─── History (CRUD) ────────────────────────────────────────────────────────────
 export const getHistory = () =>
   api.get('/history').then((r) => r.data);
+
+export const getSuggestions = (query) =>
+  api.get(`/weather/suggestions?q=${query}`).then((r) => r.data);
 
 export const saveSearch = (payload) =>
   api.post('/history', payload).then((r) => r.data);
